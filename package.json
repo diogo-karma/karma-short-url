@@ -1,0 +1,23 @@
+{
+  "name": "karma-short-url",
+  "version": "1.0.0",
+  "description": "A simple URL shortener project using Node.js + Redis",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "Diogo Karma <dg@karma.yt>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "redis": "^4.6.15",
+    "short-unique-id": "^5.2.0"
+  }
+}
