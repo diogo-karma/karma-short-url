@@ -16,11 +16,13 @@ const REDIS_KEY = process.env.REDIS_KEY ?? "anon";
 const REDIS_USER = process.env.REDIS_USER;
 
 const redis = await createClient(
-  REDIS_HOST ?? {
-    url: `redis://${
-      (REDIS_USER ? REDIS_USER + "@" : "") + REDIS_HOST + ":" + REDIS_PORT
-    }`,
-  }
+  REDIS_HOST
+    ? {
+        url: `redis://${
+          (REDIS_USER ? REDIS_USER + "@" : "") + REDIS_HOST + ":" + REDIS_PORT
+        }`,
+      }
+    : null
 )
   .on("error", (error) => console.error("Redis Client Error", error))
   .connect();
@@ -31,7 +33,7 @@ const handleErr = (res, error) => {
 };
 
 app.get("/", (req, res) => {
-  res.json({hello: "world", url: "karma.yt"});
+  res.json({ hello: "world", url: "karma.yt" });
 });
 
 app.get("/new", async (req, res) => {
@@ -47,7 +49,7 @@ app.get("/new", async (req, res) => {
   };
 
   try {
-    await redis.set(`karma:${(key ?? REDIS_KEY)}:${n.id}`, JSON.stringify(n));
+    await redis.set(`karma:${key ?? REDIS_KEY}:${n.id}`, JSON.stringify(n));
     return res.json({ status: "ok", id: n.id, key });
   } catch (error) {
     console.error(error);
@@ -57,7 +59,6 @@ app.get("/new", async (req, res) => {
 
 app.get("/:id", async (req, res) => {
   const { id } = req.params;
-  console.log(`karma:${REDIS_KEY}:${id}`);
   let data = await redis.get(`karma:${REDIS_KEY}:${id}`);
   try {
     data = JSON.parse(data);
